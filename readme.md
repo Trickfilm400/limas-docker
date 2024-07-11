@@ -10,39 +10,13 @@ It's an inventory system for smaller, mostly electrical build-parts, like resist
 
 ## Docker Usage
 
-Manually build the docker image with: `docker build -t local-limas-build .`
-
 Run the image with: `docker run --name limas -p 8080:80 -v "./data:/var/www/html/data" -e "APP_ENV=prod" -e "DATABASE_URL=mysql://username:password@mysql_host:3306/database-name?serverVersion=5.7.9&charset=utf8mb4"`
 
 On the first start an admin user with `admin@example.com` and `admin` will be created, as well as the database migrations, which run on every start.
 
-A docker-compose example can be found here:
-```yaml
-services:
-  db:
-    image: mysql
-    restart: unless-stopped
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: limas
-      MYSQL_USER: limas
-      MYSQL_PASSWORD: limas
-  limas:
-    image: n404/limas-docker
-    restart: unless-stopped
-    ports:
-      - 8080:80
-    volumes:
-      - ./data:/var/www/html/data
-    environment:
-      APP_ENV: prod
-      DATABASE_URL: mysql://limas:limas@db:3306/limas?serverVersion=5.7.9&charset=utf8mb4
-  redis:
-    image: redis:7-alpine
-    restart: unless-stopped
-```
+A docker-compose example can be found in the `examples/docker-compose.yml` file.
+
+Start the stack with `docker compose up -d` (inside the example folder, if you downloaded the whole folder).
 
 Connect to the application via `http://localhost:8080` (or the corresponding hostname of your server)
 
