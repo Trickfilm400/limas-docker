@@ -9,12 +9,20 @@ services:
       MYSQL_DATABASE: limas
       MYSQL_USER: limas
       MYSQL_PASSWORD: limas
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+      interval: 10s
   limas:
     image: n404/limas-docker
     restart: unless-stopped
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - 8080:80
     volumes:
