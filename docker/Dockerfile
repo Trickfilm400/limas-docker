@@ -108,9 +108,7 @@ RUN mkdir -p /var/www/html/data
 
 RUN chown www-data:www-data -R /var/www/html
 
-
 #VOLUME ["/var/www/html/data"]
-
-RUN chown www-data:www-data -R /var/www/html/data
+# workaround for the data folder
 USER root
 ENTRYPOINT ["/var/www/html/docker/entrypoint.sh"]
