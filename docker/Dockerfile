@@ -86,7 +86,7 @@ WORKDIR /var/www/html
 ENV REDIS_DSN="redis://redis"
 ENV APP_ENV="prod"
 ENV APP_SECRET=""
-ENV DATABASE_URL="mysql://limas:limas@mysql:3306/limas?serverVersion=5.7.9&charset=utf8mb4"
+ENV DATABASE_URL="mysql://limas:limas@mysql:3306/limas?serverVersion=8.4.6&charset=utf8mb4"
 ENV NEXAR_ID="client"
 ENV NEXAR_SECRET="secret"
 # ISO 3166 (alpha-2) country code

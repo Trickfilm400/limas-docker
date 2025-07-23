@@ -10,7 +10,7 @@ It's an inventory system for smaller, mostly electrical build-parts, like resist
 
 ## Docker Usage
 
-Run the image with: `docker run --name limas -p 8080:80 -v "./data:/var/www/html/data" -e "APP_ENV=prod" -e "DATABASE_URL=mysql://username:password@mysql_host:3306/database-name?serverVersion=5.7.9&charset=utf8mb4"`
+Run the image with: `docker run --name limas -p 8080:80 -v "./data:/var/www/html/data" -e "APP_ENV=prod" -e "DATABASE_URL=mysql://username:password@mysql_host:3306/database-name?serverVersion=8.4.6&charset=utf8mb4" n404/limas-docker`
 
 On the first start an admin user with `admin@example.com` and `admin` will be created, as well as the database migrations, which run on every start.
 
@@ -29,7 +29,7 @@ All Environment variables with their default values:
 | REDIS_DSN                 | `redis://redis`                                                            |
 | APP_ENV                   | `prod` (can only be set to `dev` or `prod`)                                |
 | APP_SECRET                | _empty_                                                                    |
-| DATABASE_URL              | `mysql://limas:limas@mysql:3306/limas?serverVersion=5.7.9&charset=utf8mb4` |
+| DATABASE_URL              | `mysql://limas:limas@mysql:3306/limas?serverVersion=8.4.6&charset=utf8mb4` |
 | NEXAR_ID                  | `client`                                                                   |
 | NEXAR_SECRET              | `secret`                                                                   |
 | NEXAR_COUNTRY             | `DE`                                                                       |
