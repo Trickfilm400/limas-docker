@@ -15,6 +15,8 @@ services:
       retries: 10
       start_period: 10s
       interval: 10s
+    volumes:
+      - ./db:/var/lib/mysql
   limas:
     image: n404/limas-docker
     restart: unless-stopped
@@ -29,7 +31,9 @@ services:
       - ./data:/var/www/html/data
     environment:
       APP_ENV: prod
-      DATABASE_URL: mysql://limas:limas@db:3306/limas?serverVersion=5.7.9&charset=utf8mb4
+      DATABASE_URL: mysql://limas:limas@db:3306/limas?serverVersion=8.4.6&charset=utf8mb4
   redis:
     image: redis:7-alpine
     restart: unless-stopped
+    volumes:
+      - ./redis:/data

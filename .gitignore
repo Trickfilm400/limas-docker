@@ -1,1 +1,4 @@
 .idea/
+examples/data
+examples/db
+examples/redis
