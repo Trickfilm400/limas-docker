@@ -4,13 +4,13 @@ WORKDIR /build
 
 # install dependencies to build image
 RUN \
-    apt update && \
+    apt update && apt full-upgrade -y && \
     apt install libldap2-dev wget zlib1g-dev libpng-dev libzip-dev curl libcurl4-gnutls-dev libxml2-dev libpq-dev unzip -y && \
     rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
     docker-php-ext-configure pdo --with-libdir=lib/x86_64-linux-gnu/ && \
     docker-php-ext-install ldap pdo && \
-    docker-php-ext-install zip curl bcmath dom ctype iconv pdo_mysql pdo_pgsql gd
+    docker-php-ext-install zip curl bcmath dom ctype iconv pdo_mysql pdo_pgsql gd intl
 
 RUN pecl install --force redis-6.0.2 \
 && rm -rf /tmp/pear \
@@ -38,7 +38,6 @@ WORKDIR /build
 COPY --from=php /build .
 RUN yarn install --frozen-lockfile
 RUN yarn build
-RUN rm -r node_modules/
 
 
 
@@ -48,19 +47,19 @@ WORKDIR /build
 
 # add dependencies to final runtime image
 RUN \
-    apt update && \
+    apt update && apt full-upgrade -y && \
     apt install libldap2-dev wget zlib1g-dev libpng-dev libzip-dev curl libcurl4-gnutls-dev libxml2-dev libpq-dev -y && \
     rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
     docker-php-ext-configure pdo --with-libdir=lib/x86_64-linux-gnu/ && \
     docker-php-ext-install ldap pdo && \
-    docker-php-ext-install zip curl bcmath dom ctype iconv pdo_mysql pdo_pgsql gd
+    docker-php-ext-install zip curl bcmath dom ctype iconv pdo_mysql pdo_pgsql gd intl
 
 RUN pecl install --force redis-6.0.2 \
 && rm -rf /tmp/pear \
 && docker-php-ext-enable redis
 
-COPY --from=node /build /var/www/html
+COPY --from=node --chown=www-data:www-data /build /var/www/html
 
 # apply apache2 config for symfony
 RUN bash -c 'echo -e "<VirtualHost *:80>\n\
@@ -106,7 +105,8 @@ RUN chmod +x /var/www/html/docker/entrypoint.sh
 
 RUN mkdir -p /var/www/html/data
 
-RUN chown www-data:www-data -R /var/www/html
+#VERY SLOW: RUN chown www-data:www-data -R /var/www/html
+RUN find /var/www/html -not -group www-data -not -user www-data -print0 | xargs -P 0 -0 --no-run-if-empty chown --no-dereference www-data:www-data
 
 #VOLUME ["/var/www/html/data"]
 # workaround for the data folder
