@@ -31,7 +31,7 @@ RUN SYMFONY_ENV=prod php composer.phar install -o
 
 
 
-FROM node:20-bullseye-slim AS node
+FROM node:20-bookworm-slim AS node
 
 WORKDIR /build
 # build frontend files
