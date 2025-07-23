@@ -24,7 +24,7 @@ RUN wget https://github.com/Lopo/Limas/archive/refs/heads/master.zip
 RUN unzip master.zip
 RUN mv Limas-master/* Limas-master/.* . || true
 # get php composer
-RUN wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - | php --
+RUN wget https://raw.githubusercontent.com/composer/getcomposer.org/f3108f64b4e1c1ce6eb462b159956461592b3e3e/web/installer -O - | php --
 # install composer dependencies
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN SYMFONY_ENV=prod php composer.phar install -o
