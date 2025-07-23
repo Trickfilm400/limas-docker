@@ -9,6 +9,7 @@ php bin/console doctrine:migrations:migrate
 
 # onetime generation
 if [[ ! -f /var/www/html/data/.docker_installed ]]; then
+  php bin/console --env=dev doctrine:fixtures:load --group=setup --append
   php bin/console limas:user:create --role super_admin admin admin@example.com admin || exit 2
   php bin/console lexik:jwt:generate-keypair || exit 2
   php bin/console limas:extjs:models || exit 2
