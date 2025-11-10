@@ -34,3 +34,10 @@ All Environment variables with their default values:
 | NEXAR_SECRET              | `secret`                                                                   |
 | NEXAR_COUNTRY             | `DE`                                                                       |
 | NEXAR_CURRENCY            | `EUR`                                                                      |
+
+## provided docker tags
+- latest
+- dev
+- nightly
+
+&copy; 2025 Trickfilm400, MIT License
