@@ -1,14 +1,14 @@
-FROM php:8.3-apache-bookworm AS php
+FROM php:8.3-apache-trixie AS php
 
 WORKDIR /build
 
 # install dependencies to build image
 RUN \
     apt update && apt full-upgrade -y && \
-    apt install libldap2-dev wget zlib1g-dev libpng-dev libzip-dev curl libcurl4-gnutls-dev libxml2-dev libpq-dev unzip -y && \
+    apt install --no-install-recommends libldap2-dev wget zlib1g-dev libpng-dev libzip-dev curl libcurl4-gnutls-dev libxml2-dev libpq-dev unzip libicu-dev -y && \
     rm -rf /var/lib/apt/lists/* && \
-    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
-    docker-php-ext-configure pdo --with-libdir=lib/x86_64-linux-gnu/ && \
+    docker-php-ext-configure ldap --with-libdir=lib/$(uname -m)-linux-gnu/ && \
+    docker-php-ext-configure pdo --with-libdir=lib/$(uname -m)-linux-gnu/ && \
     docker-php-ext-install ldap pdo && \
     docker-php-ext-install zip curl bcmath dom ctype iconv pdo_mysql pdo_pgsql gd intl
 
@@ -16,6 +16,7 @@ RUN pecl install --force redis-6.0.2 \
 && rm -rf /tmp/pear \
 && docker-php-ext-enable redis
 
+FROM php as php-build
 
 # copy files
 #COPY . .
@@ -31,33 +32,17 @@ RUN SYMFONY_ENV=prod php composer.phar install -o
 
 
 
-FROM node:20-bookworm-slim AS node
+FROM node:20-trixie-slim AS node
 
 WORKDIR /build
 # build frontend files
-COPY --from=php /build .
+COPY --from=php-build /build .
 RUN yarn install --frozen-lockfile
 RUN yarn build
 
 
 
-FROM php:8.3-apache-bookworm
-
-WORKDIR /build
-
-# add dependencies to final runtime image
-RUN \
-    apt update && apt full-upgrade -y && \
-    apt install libldap2-dev wget zlib1g-dev libpng-dev libzip-dev curl libcurl4-gnutls-dev libxml2-dev libpq-dev -y && \
-    rm -rf /var/lib/apt/lists/* && \
-    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
-    docker-php-ext-configure pdo --with-libdir=lib/x86_64-linux-gnu/ && \
-    docker-php-ext-install ldap pdo && \
-    docker-php-ext-install zip curl bcmath dom ctype iconv pdo_mysql pdo_pgsql gd intl
-
-RUN pecl install --force redis-6.0.2 \
-&& rm -rf /tmp/pear \
-&& docker-php-ext-enable redis
+FROM php as final
 
 COPY --from=node --chown=www-data:www-data /build /var/www/html
 
