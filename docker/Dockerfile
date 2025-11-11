@@ -16,7 +16,7 @@ RUN pecl install --force redis-6.0.2 \
 && rm -rf /tmp/pear \
 && docker-php-ext-enable redis
 
-FROM php as php-build
+FROM php AS php-build
 
 # copy files
 #COPY . .
@@ -42,7 +42,7 @@ RUN yarn build
 
 
 
-FROM php as final
+FROM php AS final
 
 COPY --from=node --chown=www-data:www-data /build /var/www/html
 
